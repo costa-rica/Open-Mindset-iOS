@@ -1,23 +1,21 @@
-ScreenManager:
+
+ScreenManagerMain:
+    name: "screen_manager_main"
     id: sm_main
+    scrn_parent:scrn_parent
     scrn_home:scrn_home
-    scrn_chat:scrn_chat
+    # scrn_chat:scrn_chat
 
     HomeScreen:
         id: scrn_home
         name:"screen_home"
-        canvas.before:
-            Color:
-                rgb: [0.2,0.1,0]
-            Rectangle:
-                pos: self.pos
-                size: self.size
+
     ParentScreen:
-        id: scrn_chat
-        name:"screen_chat"
+        id: scrn_parent
+        name:"screen_parent"
         canvas.before:
             Color:
-                rgb: [0.2,0.1,0.8]
+                rgb: [0.2,0.2,0.2]
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -27,34 +25,51 @@ ScreenManager:
     nav_layout:nav_layout
     nav_drawer: nav_drawer
     nav_menu: nav_menu
-    
+
     MDTopAppBar:
         id:toolbar
         pos_hint:{"top":1}
         title:"Open Mindset"
         left_action_items:[["menu", lambda x: nav_drawer.set_state("open")]]
-        md_bg_color: .3,.3,.3,1
+        right_action_items: [["home", lambda x: root.go_to_home()]]
+        md_bg_color: root.hex_to_rgba("#F19D38")
 
     MDNavigationLayout:
         id:nav_layout
-        
+        # canvas.before:
+        #     Color:
+        #         rgb: [0.1,0.9,0.1]
+        #     Rectangle:
+        #         pos: self.pos
+        #         size: self.size
         ScreenManager:
             id: child_sm
+
             ChatScreen:
+                id:scrn_chat
+                name:"screen_chat"
                 size_hint:1,None
                 height: root.height- root.toolbar.height
             SettingsScreen:
+                id:scrn_settings
+                name:"screen_settings"
                 size_hint:1,None
                 height: root.height- root.toolbar.height
         MDNavigationDrawer:
             id: nav_drawer
-            size_hint: .25, None
+            size_hint_y: None
             height:root.height - root.toolbar.height
-            # on_motion: print(self.x)
-            # state: "closed"
+            md_bg_color: 0, 0, 0, 0 
+            padding: 0
+            spacing: 0
+            canvas.before:
+                Color:
+                    rgb: [0.1,0.9,0.1]
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             NavMenu:
                 id:nav_menu
-
 
 
 <ChatScreen>
@@ -69,10 +84,25 @@ ScreenManager:
 <HomeScreen>
     id: scrn_home
     txtInptToken:txtInptToken
-
+    canvas.before:
+        Color:
+            rgb: [0.2,0.2,0.2]
+            # rgb: self.hex_to_rgba("#F19D38")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            # pos: (self.pos[0], self.pos[1] * 100)
+            # size: (self.size[0], self.size[1] * 0.1)
+    MDTopAppBar:
+        id:toolbar_home
+        pos_hint:{"top":1}
+        # title:"Open Mindset"
+        md_bg_color: root.hex_to_rgba("#F19D38")
     AnchorLayout:
         anchor_x:"center"
         anchor_y:"center"
+        size_hint_y: 0.9
+        pos_hint: {'top':0.9}
         BoxLayout:
             canvas.before:
                 Color:
@@ -93,7 +123,7 @@ ScreenManager:
                 #     Rectangle:
                 #         pos: self.pos
                 #         size: self.size
-                text:"Open Minded"
+                text:"Open Mindset"
                 pos_hint_x: .5
                 # pos_hint_y:1
                 halign: "center"
@@ -122,10 +152,12 @@ ScreenManager:
                         height: self.line_height + 2 * self.padding[1] 
                         on_text_validate: root.on_text_validate(self)
 
-                    Button:
+                    MDRaisedButton:
                         text: "Enter Chat"
-                        size_hint_y:None
-                        height: self.texture_size[1] + 2 * self.padding[1] 
+                        # size_hint_y: None
+                        # height: self.texture_size[1] + 2 * self.padding[1]
+                        # height: self.texture_size[1] + 2 * dp(10)
+                        md_bg_color: root.hex_to_rgba("#F19D38")
                         on_press: 
                             root.go_to_chat()
                             root.on_text_validate(txtInptToken)
@@ -135,31 +167,43 @@ ScreenManager:
                 anchor_x:"center"
                 anchor_y:"center"
                 BoxLayout:
-                    # canvas.before:
-                    #     Color:
-                    #         rgb: [0.7,0.7,0.7]
-                    #     RoundedRectangle:
-                    #         pos: self.pos
-                    #         size: self.size
-                    #         radius: [(5,5),(5,5),(5,5),(5,5)]
-                    #         orientation: "vertical"
-                    #         size_hint: .9, 0.9
-                    #         pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
+                    orientation:"vertical"
+                    size_hint: .9,.9
+                    canvas.before:
+                        Color:
+                            rgba: root.hex_to_rgba("#F19D38")
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [(10,10)]
+                            # orientation: "vertical"
+                            # size_hint: .9, 0.9
+                            # pos_hint: {"center_x": 0.5, "center_y": 0.5}
                     MDLabel:
+                        padding:10
                         text: "This is a description place. 90 ipsum characters in there."
+                        size_hint:1,None
+                        height: self.texture_size[1]
+                    MDLabel:
+                        # size_hint: 1,.9
+                        text: ""
 
-<NavMenu@BoxLayout>
+
+
+<NavMenu>
+    orientation:"vertical"
     canvas.before:
         Color:
             rgb: [0.9,0.1,0.1]
         Rectangle:
-            pos: self.pos
-            size: self.size
+            pos: root.pos
+            size: root.size
     Button:
         text: "Chat"
+        on_press: root.clicked_btn(self)
 
     Button:
         text: "Settings"
+        on_press: root.clicked_btn(self)
 
 
