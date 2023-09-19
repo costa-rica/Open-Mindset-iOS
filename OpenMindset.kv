@@ -1,0 +1,165 @@
+ScreenManager:
+    id: sm_main
+    scrn_home:scrn_home
+    scrn_chat:scrn_chat
+
+    HomeScreen:
+        id: scrn_home
+        name:"screen_home"
+        canvas.before:
+            Color:
+                rgb: [0.2,0.1,0]
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    ParentScreen:
+        id: scrn_chat
+        name:"screen_chat"
+        canvas.before:
+            Color:
+                rgb: [0.2,0.1,0.8]
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+<ParentScreen>:
+    toolbar:toolbar
+    nav_layout:nav_layout
+    nav_drawer: nav_drawer
+    nav_menu: nav_menu
+    
+    MDTopAppBar:
+        id:toolbar
+        pos_hint:{"top":1}
+        title:"Open Mindset"
+        left_action_items:[["menu", lambda x: nav_drawer.set_state("open")]]
+        md_bg_color: .3,.3,.3,1
+
+    MDNavigationLayout:
+        id:nav_layout
+        
+        ScreenManager:
+            id: child_sm
+            ChatScreen:
+                size_hint:1,None
+                height: root.height- root.toolbar.height
+            SettingsScreen:
+                size_hint:1,None
+                height: root.height- root.toolbar.height
+        MDNavigationDrawer:
+            id: nav_drawer
+            size_hint: .25, None
+            height:root.height - root.toolbar.height
+            # on_motion: print(self.x)
+            # state: "closed"
+            NavMenu:
+                id:nav_menu
+
+
+
+<ChatScreen>
+    BoxLayout:
+        Label:
+            text: "Chat Screen"
+<SettingsScreen>
+    BoxLayout:
+        Label:
+            text: "Settings Screen"
+
+<HomeScreen>
+    id: scrn_home
+    txtInptToken:txtInptToken
+
+    AnchorLayout:
+        anchor_x:"center"
+        anchor_y:"center"
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgb: [0.7,0.7,0.7]
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [(5,5),(5,5),(5,5),(5,5)]
+            orientation:"vertical"
+            size_hint:.9,.9
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            Label:
+                size_hint_y:.05
+            MDLabel:
+                # canvas.before:
+                #     Color:
+                #         rgb: [100/255,0.1,0]
+                #     Rectangle:
+                #         pos: self.pos
+                #         size: self.size
+                text:"Open Minded"
+                pos_hint_x: .5
+                # pos_hint_y:1
+                halign: "center"
+                size_hint: 1,.1
+                font_size: 40
+                spacing: 10
+            AnchorLayout:
+                anchor_x:"center"
+                anchor_y:"center"
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint: .9, 0.9
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    MDLabel:
+                        id: lblToken
+                        text: "API Token:"
+                        size_hint_y:None
+                        height: self.texture_size[1]
+                        
+
+                    TextInput:
+                        id:txtInptToken
+                        multiline: False
+                        size_hint_y:None
+                        height: self.line_height + 2 * self.padding[1] 
+                        on_text_validate: root.on_text_validate(self)
+
+                    Button:
+                        text: "Enter Chat"
+                        size_hint_y:None
+                        height: self.texture_size[1] + 2 * self.padding[1] 
+                        on_press: 
+                            root.go_to_chat()
+                            root.on_text_validate(txtInptToken)
+                    #     size_hint: 1, 0.1
+                    #     pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            AnchorLayout:
+                anchor_x:"center"
+                anchor_y:"center"
+                BoxLayout:
+                    # canvas.before:
+                    #     Color:
+                    #         rgb: [0.7,0.7,0.7]
+                    #     RoundedRectangle:
+                    #         pos: self.pos
+                    #         size: self.size
+                    #         radius: [(5,5),(5,5),(5,5),(5,5)]
+                    #         orientation: "vertical"
+                    #         size_hint: .9, 0.9
+                    #         pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                    MDLabel:
+                        text: "This is a description place. 90 ipsum characters in there."
+
+<NavMenu@BoxLayout>
+    canvas.before:
+        Color:
+            rgb: [0.9,0.1,0.1]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Button:
+        text: "Chat"
+
+    Button:
+        text: "Settings"
+
+
