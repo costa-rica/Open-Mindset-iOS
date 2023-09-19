@@ -1,7 +1,7 @@
 # Open Mindset iOS
 
 ## Description
-This repo is the Python Kivy Project poriton of Open Mindset for iOS. It is part of the larger Open Mindset project found here: https://github.com/amwebexpert/poc-mobile-python#building-for-ios.
+This repo is the Python Kivy Project poriton of Open Mindset for iOS. Open Mindset found here: https://github.com/amwebexpert/poc-mobile-python#building-for-ios.
 
 
 ## Installation
