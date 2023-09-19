@@ -6,6 +6,11 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import Clock
 import platform
 from kivy.core.window import Window
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
 
 if platform not in ['ios','android']:
   Window.size = (960, 1704)# iPhone 13 Mini
@@ -62,8 +67,21 @@ class NavMenu(BoxLayout):
         if widget.text == "Settings":
             self.child_sm.current = "screen_settings"
 
+class ConfigObject:
+    def __init__(self):
+        # Fetch the PROJECT_DB_DIR from the environment variables
+        self.db_path = os.environ.get("PROJECT_DB_DIR")
+        # Check if the directory exists, and create it if not
+        if self.db_path and not os.path.exists(self.db_path):
+            try:
+                os.makedirs(self.db_path)
+            except Exception as e:
+                # Handle the exception (e.g., log it, raise a custom error, etc.)
+                print(f"Error creating directory {self.db_path}: {e}")
 
 class MainApp(MDApp):
+    # Initialize the Config property
+    config = ConfigObject()
     def build(self):
         return Builder.load_file('OpenMindset.kv')
 
